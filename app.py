@@ -58,9 +58,9 @@ def predict():
     prediction = model.predict(final_input)
     
     if prediction[0] == 1:
-        return "<h1>🎉 Credit Card Approved!</h1><br><a href='/'>Back</a>"
+        return "<h1> Credit Card Approved!</h1><br><a href='/'>Back</a>"
     else:
-        return "<h1>❌ Credit Card Rejected!</h1><br><a href='/'>Back</a>"
+        return "<h1> Credit Card Rejected!</h1><br><a href='/'>Back</a>"
 
 if __name__ == '__main__': 
     app.run(host='0.0.0.0', port=5000, debug=True)
