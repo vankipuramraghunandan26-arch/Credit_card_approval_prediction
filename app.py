@@ -12,45 +12,47 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Web form input array vectors extraction [Gender, Car, Income, Age, Employment]
-    form_vals = [float(x) for x in request.form.values()]
+    # Fetching exact 14 parameters sent from the frontend grid system
+    g = float(request.form['g'])
+    car = float(request.form['car'])
+    realty = float(request.form['realty'])
+    inc = float(request.form['inc'])
+    inc_type = float(request.form['inc_type'])
+    edu = float(request.form['edu'])
+    fam = float(request.form['fam'])
+    house = float(request.form['house'])
+    age = float(request.form['age'])
+    ye = float(request.form['ye'])
+    fam_mem = float(request.form['fam_mem'])
     
     # --------------------------------------------------------------------------
-    # 🧩 CRITICAL FIX: RE-BUILDING EXACT TRAINED 10-FEATURE INPUT STRUCTURE
-    # Training dimension schema mapping columns count rules:
-    # [CODE_GENDER, FLAG_OWN_CAR, FLAG_OWN_REALTY, CNT_CHILDREN, AMT_INCOME_TOTAL, 
-    #  NAME_INCOME_TYPE, NAME_EDUCATION_TYPE, NAME_FAMILY_STATUS, NAME_HOUSING_TYPE, 
-    #  FLAG_WORK_PHONE, FLAG_PHONE, FLAG_EMAIL, OCCUPATION_TYPE, CNT_FAM_MEMBERS, 
-    #  AGE, YEARS_EMPLOYED] -> Total 16 features context shape matches perfectly!
+    # 🧩 PERFECT FIT: Mapping exactly into the 16 features shape expected by scaler
+    # Schema columns reference template:
+    # 1.CODE_GENDER, 2.FLAG_OWN_CAR, 3.FLAG_OWN_REALTY, 4.CNT_CHILDREN, 5.AMT_INCOME_TOTAL, 
+    # 6.NAME_INCOME_TYPE, 7.NAME_EDUCATION_TYPE, 8.NAME_FAMILY_STATUS, 9.NAME_HOUSING_TYPE, 
+    # 10.FLAG_WORK_PHONE, 11.FLAG_PHONE, 12.FLAG_EMAIL, 13.OCCUPATION_TYPE, 14.CNT_FAM_MEMBERS, 
+    # 15.AGE, 16.YEARS_EMPLOYED
     # --------------------------------------------------------------------------
-    
-    gender = form_vals[0]
-    car = form_vals[1]
-    income = form_vals[2]
-    age = form_vals[3]
-    employment = form_vals[4]
-    
-    # Filling missing category flags exactly with zero vectors (0) to match shape 16
     full_features = [
-        gender,      # 1. CODE_GENDER
-        car,         # 2. FLAG_OWN_CAR
-        0.0,         # 3. FLAG_OWN_REALTY (Default pad)
-        0.0,         # 4. CNT_CHILDREN (Default pad)
-        income,      # 5. AMT_INCOME_TOTAL
-        0.0,         # 6. NAME_INCOME_TYPE (Default pad)
-        0.0,         # 7. NAME_EDUCATION_TYPE (Default pad)
-        0.0,         # 8. NAME_FAMILY_STATUS (Default pad)
-        0.0,         # 9. NAME_HOUSING_TYPE (Default pad)
-        0.0,         # 10. FLAG_WORK_PHONE (Default pad)
-        0.0,         # 11. FLAG_PHONE (Default pad)
-        0.0,         # 12. FLAG_EMAIL (Default pad)
-        0.0,         # 13. OCCUPATION_TYPE (Default pad)
-        0.0,         # 14. CNT_FAM_MEMBERS (Default pad)
-        age,         # 15. AGE
-        employment   # 16. YEARS_EMPLOYED
+        g,          # 1. CODE_GENDER
+        car,        # 2. FLAG_OWN_CAR
+        realty,     # 3. FLAG_OWN_REALTY
+        0.0,        # 4. CNT_CHILDREN (Default pad)
+        inc,        # 5. AMT_INCOME_TOTAL
+        inc_type,   # 6. NAME_INCOME_TYPE
+        edu,        # 7. NAME_EDUCATION_TYPE
+        fam,        # 8. NAME_FAMILY_STATUS
+        house,      # 9. NAME_HOUSING_TYPE
+        0.0,        # 10. FLAG_WORK_PHONE (Default pad)
+        0.0,        # 11. FLAG_PHONE (Default pad)
+        0.0,        # 12. FLAG_EMAIL (Default pad)
+        0.0,        # 13. OCCUPATION_TYPE (Default pad)
+        fam_mem,    # 14. CNT_FAM_MEMBERS
+        age,        # 15. AGE
+        ye          # 16. YEARS_EMPLOYED
     ]
     
-    # Converting array vector layout dimensions checks
+    # Transforming data matrix
     final_input = scaler.transform([np.array(full_features)])
     prediction = model.predict(final_input)
     
