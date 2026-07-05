@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <html>
-<head><title>Credit Card Approval Prediction UI</title></head>
+<head>
+    <title>Credit Card Approval Prediction UI</title>
+</head>
 <body style="font-family: Arial; margin: 40px; background: #f4f7f6;">
     <div style="max-width: 500px; background: white; padding: 30px; margin: auto; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
         <h2 style="color: #0050b3; text-align: center;">Credit Card Approval System</h2>
         <form action="/predict" method="POST">
-            <label>Gender (0=Female, 1=Male):</label><input type="number" name="g" value="0"><br><br>
-            <label>Own Car (0=No, 1=Yes):</label><input type="number" name="car" value="1"><br><br>
-            <label>Total Annual Income ($):</label><input type="number" name="inc" value="250000"><br><br>
-            <label>Applicant Age (Years):</label><input type="number" name="age" value="30"><br><br>
-            <label>Years of Employment:</label><input type="number" name="ye" value="8"><br><br>
-            <button type="submit" style="width:100%; background:#1890ff; color:white; padding:10px; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">Predict Status</button>
+            <label>Gender (0=Female, 1=Male):</label>
+            <input type="number" name="g" placeholder="e.g., 0 or 1" required style="width:100%; padding:8px; margin: 10px 0 20px 0; border:1px solid #ccc; border-radius:4px;"><br>
+            
+            <label>Own Car (0=No, 1=Yes):</label>
+            <input type="number" name="car" placeholder="e.g., 0 or 1" required style="width:100%; padding:8px; margin: 10px 0 20px 0; border:1px solid #ccc; border-radius:4px;"><br>
+            
+            <label>Total Annual Income ($):</label>
+            <input type="number" name="inc" placeholder="Enter annual income" required style="width:100%; padding:8px; margin: 10px 0 20px 0; border:1px solid #ccc; border-radius:4px;"><br>
+            
+            <label>Applicant Age (Years):</label>
+            <input type="number" name="age" placeholder="Enter age" required style="width:100%; padding:8px; margin: 10px 0 20px 0; border:1px solid #ccc; border-radius:4px;"><br>
+            
+            <label>Years of Employment:</label>
+            <input type="number" name="ye" placeholder="Enter years of employment" required style="width:100%; padding:8px; margin: 10px 0 20px 0; border:1px solid #ccc; border-radius:4px;"><br>
+            
+            <button type="submit" style="width:100%; background:#1890ff; color:white; padding:12px; border:none; border-radius:4px; font-weight:bold; cursor:pointer; font-size:16px;">Predict Status</button>
         </form>
     </div>
 </body>
