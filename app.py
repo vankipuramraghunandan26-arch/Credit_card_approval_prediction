@@ -12,7 +12,7 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # 1. Fetch values matching exactly with HTML input names
+    # 1. Parsing all inputs from web UI layout fields
     g = float(request.form['g'])
     car = float(request.form['car'])
     realty = float(request.form['realty'])
@@ -23,17 +23,25 @@ def predict():
     house = float(request.form['house'])
     fam_mem = float(request.form['fam_mem'])
     
-    # 2. Reading the updated years fields safely
     user_age = float(request.form['age_years'])
-    age_scaled = user_age * 0.9778  # Internal mathematical scaling
-
     user_exp = float(request.form['exp_years'])
+    emi_past = float(request.form['emi_past'])
+    loans = float(request.form['loans'])
+    
+    # 2. STRICT FAIL-SAFE LOGIC FOR REJECTED CASES
+    # Real-world risk profiles check parameters:
+    # If income is extremely low OR customer has high pastdue default loans, directly reject.
+    if inc < 5000 or emi_past >= 3 or loans >= 8:
+        return "<h1>❌ Credit Card Rejected!</h1><br><p style='color:red;'>Reason: High Risk Profile Detected.</p><br><a href='/'>Back</a>"
+    
+    # 3. INTERNAL MATHEMATICAL MATRIX TRANSLATION
+    age_scaled = user_age * 0.9778
     if user_exp == 0:
         ye_scaled = 0.0
     else:
-        ye_scaled = -(user_exp * 0.4191) # Internal mathematical scaling
+        ye_scaled = -(user_exp * 0.4191)
     
-    # 3. Constructing the 16 features matrix for scaler input
+    # 4. COMPILING THE FULL 16 FEATURES FOR MACHINE LEARNING SCALER
     full_features = [
         g,           # 1. CODE_GENDER
         car,         # 2. FLAG_OWN_CAR
@@ -53,7 +61,7 @@ def predict():
         ye_scaled    # 16. YEARS_EMPLOYED
     ]
     
-    # ML Prediction loop
+    # Running mathematical pipeline transformation loops
     final_input = scaler.transform([np.array(full_features)])
     prediction = model.predict(final_input)
     
@@ -64,3 +72,4 @@ def predict():
 
 if __name__ == '__main__': 
     app.run(host='0.0.0.0', port=5000, debug=True)
+    
