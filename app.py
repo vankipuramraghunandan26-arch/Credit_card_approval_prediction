@@ -6,6 +6,33 @@ app = Flask(__name__)
 model = pickle.load(open('model.pkl', 'rb'))
 scaler = pickle.load(open('scaler.pkl', 'rb'))
 
+# Common professional CSS style for centered box output layout
+CENTER_BOX_TEMPLATE = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Result</title>
+    <style>
+        body {{ font-family: Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }}
+        .result-card {{ background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; max-width: 450px; width: 90%; border-top: 5px solid {border_color}; }}
+        .icon {{ font-size: 50px; margin-bottom: 15px; }}
+        h1 {{ color: #333; font-size: 24px; margin: 10px 0; }}
+        p {{ color: #666; font-size: 15px; margin-bottom: 25px; line-height: 1.4; }}
+        .back-btn {{ display: inline-block; background: #1890ff; color: white; padding: 10px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 14px; transition: background 0.2s; }}
+        .back-btn:hover {{ background: #40a9ff; }}
+    </style>
+</head>
+<body>
+    <div class="result-card">
+        <div class="icon">{icon}</div>
+        <h1>{title}</h1>
+        <p>{message}</p>
+        <a href="/" class="back-btn">Go Back</a>
+    </div>
+</body>
+</html>
+"""
+
 @app.route('/')
 def home(): 
     return render_template('index.html')
@@ -28,11 +55,14 @@ def predict():
     emi_past = float(request.form['emi_past'])
     loans = float(request.form['loans'])
     
-    # 2. STRICT FAIL-SAFE LOGIC FOR REJECTED CASES
-    # Real-world risk profiles check parameters:
-    # If income is extremely low OR customer has high pastdue default loans, directly reject.
+    # 2. STRICT FAIL-SAFE LOGIC FOR REJECTED CASES (High Risk Profile)
     if inc < 5000 or emi_past >= 3 or loans >= 8:
-        return "<h1>❌ Credit Card Rejected!</h1><br><p style='color:red;'>Reason: High Risk Profile Detected.</p><br><a href='/'>Back</a>"
+        return CENTER_BOX_TEMPLATE.format(
+            border_color="#f5222d", 
+            icon="❗", 
+            title="Credit Card Rejected!", 
+            message="Reason: High Risk Profile Detected based on low income or pending defaults."
+        )
     
     # 3. INTERNAL MATHEMATICAL MATRIX TRANSLATION
     age_scaled = user_age * 0.9778
@@ -43,33 +73,27 @@ def predict():
     
     # 4. COMPILING THE FULL 16 FEATURES FOR MACHINE LEARNING SCALER
     full_features = [
-        g,           # 1. CODE_GENDER
-        car,         # 2. FLAG_OWN_CAR
-        realty,      # 3. FLAG_OWN_REALTY
-        0.0,         # 4. CNT_CHILDREN
-        inc,         # 5. AMT_INCOME_TOTAL
-        inc_type,    # 6. NAME_INCOME_TYPE
-        edu,         # 7. NAME_EDUCATION_TYPE
-        fam,         # 8. NAME_FAMILY_STATUS
-        house,       # 9. NAME_HOUSING_TYPE
-        0.0,         # 10. FLAG_WORK_PHONE
-        0.0,         # 11. FLAG_PHONE
-        0.0,         # 12. FLAG_EMAIL
-        0.0,         # 13. OCCUPATION_TYPE
-        fam_mem,     # 14. CNT_FAM_MEMBERS
-        age_scaled,  # 15. AGE
-        ye_scaled    # 16. YEARS_EMPLOYED
+        g, car, realty, 0.0, inc, inc_type, edu, fam, house, 0.0, 0.0, 0.0, 0.0, fam_mem, age_scaled, ye_scaled
     ]
     
-    # Running mathematical pipeline transformation loops
+    # Running model prediction pipeline
     final_input = scaler.transform([np.array(full_features)])
     prediction = model.predict(final_input)
     
     if prediction[0] == 1:
-        return "<h1> Credit Card Approved!</h1><br><a href='/'>Back</a>"
+        return CENTER_BOX_TEMPLATE.format(
+            border_color="#52c41a", 
+            icon="🎉", 
+            title="Credit Card Approved!", 
+            message="Congratulations! Your profile successfully satisfies the credit eligibility criteria."
+        )
     else:
-        return "<h1> Credit Card Rejected!</h1><br><a href='/'>Back</a>"
+        return CENTER_BOX_TEMPLATE.format(
+            border_color="#f5222d", 
+            icon="❗", 
+            title="Credit Card Rejected!", 
+            message="Sorry, the prediction model determined a mismatch with approval verification standards."
+        )
 
 if __name__ == '__main__': 
     app.run(host='0.0.0.0', port=5000, debug=True)
-    
