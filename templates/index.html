@@ -45,13 +45,25 @@
                 <div class="form-group"><label>Own Car</label><select name="car"><option value="1">Yes</option><option value="0">No</option></select></div>
                 <div class="form-group"><label>Own House</label><select name="realty"><option value="1">Yes</option><option value="0">No</option></select></div>
                 <div class="form-group"><label>Total Annual Income ($)</label><input type="number" name="inc" placeholder="Annual Income" required></div>
-                <div class="form-group"><label>Income Type</label><select name="inc_type"><option value="1">Working</option><option value="0">Commercial associate</option><option value="2">Pensioner</option></select></div>
+                
+                <div class="form-group">
+                    <label>Income Type</label>
+                    <select name="inc_type">
+                        <option value="1">Working</option>
+                        <option value="0">Commercial associate</option>
+                        <option value="3">State servant</option>
+                        <option value="2">Pensioner</option>
+                        <option value="4">Student</option>
+                    </select>
+                </div>
+                
                 <div class="form-group"><label>Education</label><select name="edu"><option value="1">Secondary / secondary special</option><option value="0">Higher education</option></select></div>
                 <div class="form-group"><label>Family Status</label><select name="fam"><option value="0">Married</option><option value="1">Single / not married</option></select></div>
                 <div class="form-group"><label>Housing Type</label><select name="house"><option value="0">House / apartment</option><option value="1">Rented apartment</option></select></div>
                 <div class="form-group"><label>Age (Years)</label><input type="number" name="age_years" placeholder="Age" required></div>
-                <div class="form-group"><label>Employment Years</label><input type="number" name="exp_years" placeholder="Employment Years" required></div>
+                <div class="form-group"><label>Employment Years</label><input type="number" name="exp_years" placeholder="Employment Years (0 if Student)" required></div>
                 <div class="form-group"><label>Family Members</label><input type="number" name="fam_mem" placeholder="Family Members" required></div>
+                
                 <div class="btn-container"><button type="submit" class="predict-btn">⚡ Predict Credit Approval</button></div>
             </div>
         </form>
