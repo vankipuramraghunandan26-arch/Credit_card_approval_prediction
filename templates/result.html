@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction Status Matrix Result</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: {{ '#2b6cb0' if status=='approved' else '#c53030' }}; color: white; }
+        .result-box { background: white; color: #2d3748; padding: 40px; border-radius: 12px; text-align: center; width: 90%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .badge { font-size: 50px; color: {{ '#48bb78' if status=='approved' else '#f56565' }}; margin-bottom: 10px; }
+        h1 { margin: 5px 0; font-size: 26px; color: {{ '#2f855a' if status=='approved' else '#9b2c2c' }}; }
+        p.sub { font-size: 14px; color: #718096; margin-bottom: 25px; }
+        .metric-row { margin: 15px 0; font-size: 15px; text-align: left; background: #f7fafc; padding: 12px; border-radius: 6px; display: flex; justify-content: space-between; font-weight: 600; }
+        .bar-container { background: #e2e8f0; border-radius: 10px; height: 10px; width: 100%; margin: 10px 0 20px 0; overflow: hidden; }
+        .bar-fill { height: 100%; background: {{ '#48bb78' if status=='approved' else '#f56565' }}; width: {{ score }}%; }
+        .back-btn { display: block; width: 100%; background: #0052cc; color: white; padding: 12px 0; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 14px; margin-top: 20px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+    <div class="result-box">
+        <div class="badge">{{ '✅' if status=='approved' else '❌' }}</div>
+        <h1>{{ 'Credit Approved' if status=='approved' else 'Credit Rejected' }}</h1>
+        <p class="sub">Machine Learning Prediction Engine</p>
+        
+        <div class="metric-row"><span>Confidence Score:</span> <span>{{ score }}%</span></div>
+        <div class="bar-container"><div class="bar-fill"></div></div>
+        <div class="metric-row"><span>Risk Level:</span> <span style="color:{{ '#2f855a' if status=='approved' else '#9b2c2c' }}">{{ risk }}</span></div>
+        
+        <p style="font-size:13px; color:#4a5568; line-height:1.4; margin-top:20px;">{{ msg }}</p>
+        <a href="/" class="back-btn">Predict Another Application</a>
+    </div>
+</body>
+</html>
